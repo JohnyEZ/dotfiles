@@ -1,6 +1,7 @@
 local packer_user_config = vim.api.nvim_create_augroup("packer_user_config", { clear = true })
 local info_log = require("utils").info
 
+-- Turn off syntax highlighting for large files
 vim.api.nvim_create_autocmd("BufEnter", {
   group = syntax_group,
   pattern = "*",
@@ -11,15 +12,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end
 })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = plugins_group,
-  pattern = "plugins.lua",
-  callback = function()
-    vim.cmd [[ source <afile> | PackerCompile ]]
-    info_log("Recompiled plugins", "autocmds.lua")
-  end
-})
-
+-- Make NvimTree bufferline align tabs
 vim.api.nvim_create_autocmd('BufWinLeave', {
   pattern = '*',
   callback = function()
@@ -27,4 +20,23 @@ vim.api.nvim_create_autocmd('BufWinLeave', {
       require("bufferline.api").set_offset(0)
     end
   end
+})
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  desc = "Prevent the overwriting of certain highlight groups by colorschemes",
+  callback = function()
+    vim.api.nvim_set_hl(0, "NormalFloat", {
+      link = "Normal",
+    })
+    vim.api.nvim_set_hl(0, "FloatBorder", {
+      bg = "none",
+    })
+
+    local error_float = vim.api.nvim_get_hl(0, { name = "ErrorFloat" })
+    error_float.bg = nil
+    error_float.ctermbg = nil
+
+    vim.api.nvim_set_hl(0, "ErrorFloat", error_float)
+  end,
 })

@@ -3,7 +3,7 @@ local M = {}
 function M.update_config(config)
   config.window_background_opacity = 0.8
   config.macos_window_background_blur = 20
-
+  config.enable_wayland = false
   config.initial_rows = 25
   config.initial_cols = 100
 

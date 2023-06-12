@@ -10,8 +10,11 @@ local Direction = {
 require("toggleterm").setup {
   open_mapping = [[<c-\>]],
   direction = Direction.float,
+  size = function(term)
+    return math.floor(vim.api.nvim_win_get_height(0) * 0.5)
+  end,
   hide_numbers = true,
-  shade_terminals = true,
+  shade_terminals = false,
   shading_factor = 3,
   start_in_insert = true,
   insert_mappings = true,
@@ -27,6 +30,8 @@ require("toggleterm").setup {
     height = function()
       math.floor(vim.api.nvim_win_get_height(0) * 0.8)
     end,
-    winblend = 3,
+    winblend = 0,
   }
 }
+
+vim.keymap.set(mode.visual_select, "<C-s>", ":ToggleTermSendVisualSelection<CR>", { noremap = true })
